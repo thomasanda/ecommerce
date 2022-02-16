@@ -21,7 +21,7 @@ function App() {
 
   return (
     <div>
-      <Header />
+      <Header currentUser={currentUser} />
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/shop' element={<ShopPage />} />
