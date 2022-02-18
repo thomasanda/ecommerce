@@ -15,7 +15,6 @@ import "./header.styles.scss";
 const Header = () => {
   const hidden = useSelector(selectCartHidden);
   const currentUser = useSelector(selectCurrentUser);
-  console.log("///////", currentUser);
 
   return (
     <div className="header">

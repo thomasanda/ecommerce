@@ -30,7 +30,7 @@ function App() {
       }
     });
     dispatch(setCurrentUser(currentUser));
-  }, []);
+  }, [dispatch, currentUser]);
 
   return (
     <div>
