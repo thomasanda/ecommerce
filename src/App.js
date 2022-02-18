@@ -11,18 +11,26 @@ import CheckoutPage from "./pages/checkout/checkout.component";
 
 import Header from "./components/header/header.component";
 
-// import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
+import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 
-// import { checkUserSerssion } from "./redux/user/user.actions";
+import { setCurrentUser } from "./redux/user/user.actions";
 import { selectCurrentUser } from "./redux/user/user.selectors";
 
 function App() {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const currentUser = useSelector(selectCurrentUser);
 
-  // useEffect(() => {
-  //   dispatch(checkUserSerssion());
-  // }, [dispatch]);
+  useEffect(() => {
+    auth.onAuthStateChanged(async (userAuth) => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+        userRef.onSnapshot((snapshot) => {
+          dispatch(setCurrentUser({ id: snapshot.id, ...snapshot.data() }));
+        });
+      }
+    });
+    dispatch(setCurrentUser(currentUser));
+  }, []);
 
   return (
     <div>
