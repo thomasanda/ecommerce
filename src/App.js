@@ -11,26 +11,17 @@ import CheckoutPage from "./pages/checkout/checkout.component";
 
 import Header from "./components/header/header.component";
 
-import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
-
-import { setCurrentUser } from "./redux/user/user.actions";
 import { selectCurrentUser } from "./redux/user/user.selectors";
+import { checkUserSession } from "./redux/user/user.actions";
 
 function App() {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectCurrentUser);
+  console.log(currentUser);
 
   useEffect(() => {
-    auth.onAuthStateChanged(async (userAuth) => {
-      if (userAuth) {
-        const userRef = await createUserProfileDocument(userAuth);
-        userRef.onSnapshot((snapshot) => {
-          dispatch(setCurrentUser({ id: snapshot.id, ...snapshot.data() }));
-        });
-      }
-    });
-    dispatch(setCurrentUser(currentUser));
-  }, [dispatch, currentUser]);
+    dispatch(checkUserSession());
+  }, [dispatch]);
 
   return (
     <div>
@@ -42,7 +33,7 @@ function App() {
         <Route
           path="/signin"
           element={
-            currentUser ? <Navigate replace to="/" /> : <SignInAndSignUpPage />
+            currentUser ? <Navigate to="/" replace /> : <SignInAndSignUpPage />
           }
         />
       </Routes>

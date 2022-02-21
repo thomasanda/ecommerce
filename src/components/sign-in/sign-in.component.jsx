@@ -1,13 +1,22 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
 
-import { auth, signInWithGoogle } from "../../firebase/firebase.utils";
+import {
+  googleSignInStart,
+  emailSignInStart,
+} from "../../redux/user/user.actions";
 
 import "./sign-in.styles.scss";
 
 const SingIn = () => {
+  const dispatch = useDispatch();
+  const googleSignInStartClickHandler = () => dispatch(googleSignInStart());
+  const emailSignInStartHandler = (email, password) =>
+    dispatch(emailSignInStart({ email, password }));
+
   const [userCredentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -17,13 +26,7 @@ const SingIn = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    try {
-      await auth.signInWithEmailAndPassword(email, password);
-      setCredentials({ email: "", password: "" });
-    } catch (error) {
-      console.error(error);
-    }
+    emailSignInStartHandler(email, password);
   };
 
   const handleChange = (event) => {
@@ -55,7 +58,11 @@ const SingIn = () => {
         />
         <div className="buttons">
           <CustomButton type="submit">Sign in</CustomButton>
-          <CustomButton onClick={signInWithGoogle} isGoogleSignIn>
+          <CustomButton
+            type="button"
+            onClick={googleSignInStartClickHandler}
+            isGoogleSignIn
+          >
             Sign in with Google
           </CustomButton>
         </div>
